@@ -1,0 +1,10 @@
+<webscript>
+  <shortname><%= shortname %></shortname>
+  <description><%= description %></description>
+  <% if(family && family.length > 0) { %>
+  <family><%= family %></family>
+  <% } %>
+  <url><%= url%></url>
+  <authentication><%= authentication%></authentication>
+  <format default="<%= format%>">extension</format>
+</webscript>
