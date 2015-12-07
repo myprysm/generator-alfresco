@@ -36,7 +36,7 @@
     <!-- Demonstrating the dependency / installation of the repo AMP developed in the 'repo-amp' module -->
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>repo-amp</artifactId>
+      <artifactId><%= moduleId %></artifactId>
       <version>${project.version}</version>
       <type>amp</type>
     </dependency>
@@ -85,7 +85,7 @@
             <!-- Add / sort your AMPs here -->
             <overlay>
               <groupId>${project.groupId}</groupId>
-              <artifactId>repo-amp</artifactId>
+              <artifactId><%= moduleId %></artifactId>
               <type>amp</type>
             </overlay>
             <!-- Uncomment if you are using SPP -->
