@@ -30,37 +30,38 @@ module.exports = yeoman.generators.Base.extend({
     }, {
       type: 'input',
       name: 'url',
-      message: 'URL of the webscript',
-      default: this.appname
+      message: 'URL of the webscript'
     }, {
       type: 'list',
       name: 'method',
       message: 'HTTP Method applied for the webscript',
-      choices: ['GET', 'POST', 'PUT', 'DELETE'],
-      default: 'GET',
-      filter: function (input) {
-        return input.toLowerCase();
-      }
+      choices: [
+        {value: 'get', name: 'GET'},
+        {value: 'post', name: 'POST'},
+        {value: 'put', name: 'PUT'},
+        {value: 'delete', name: 'DELETE'}
+      ],
+      default: 0
     }, {
       type: 'list',
       name: 'format',
       message: 'Default format used for response rendering',
-      choices: ['JSON', 'HTML', 'XML', 'Atom'],
-      default: 'JSON',
-      filter: function (input) {
-        return input.toLowerCase();
-      }
+      choices: [
+        {value: 'json', name: 'JSON'},
+        {value: 'html', name: 'HTML'},
+        {value: 'xml', name: 'XML'},
+        {value: 'atom', name: 'Atom'}
+      ],
+      default: 0
     }, {
       type: 'list',
       name: 'authentication',
       message: 'Authentication type for the webscript',
       choices: ['none', 'guest', 'user', 'admin'],
-      default: 'user'
+      default: 2
     }];
 
     this.prompt(prompts, function (props) {
-      props.format = props.format.toLowerCase();
-      props.method = props.method.toLowerCase();
       this.props = props;
       done();
     }.bind(this));
@@ -84,7 +85,7 @@ module.exports = yeoman.generators.Base.extend({
       this.destinationPath(baseScript + this.props.format + '.ftl')
     );
     this.fs.copy(
-      this.templatePath('webscript.method.js.tpl'),
+      this.templatePath('webscript.method.js'),
       this.destinationPath(baseScript + 'js')
     );
   }

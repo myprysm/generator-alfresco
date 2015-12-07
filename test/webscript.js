@@ -12,8 +12,8 @@ describe('generator-alfresco:webscript', function () {
         shortname: 'sample-webscript',
         description: 'Sample description',
         url: '/com/sample/adminscript',
-        method: 'GET',
-        format: 'JSON',
+        method: 'get',
+        format: 'json',
         authentication: 'admin'
       })
       .on('end', done);
