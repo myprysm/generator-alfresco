@@ -74,6 +74,18 @@ module.exports = yeoman.generators.Base.extend({
       package: this.props.package
     };
 
+    var shareAmp = this.props.artifactId + '-share-amp';
+    var shareModule = {moduleId: shareAmp};
+    var sharePom = _.assign(parent, shareModule);
+    var sharePkg = _.assign(pkg, shareModule);
+    var sharePath = shareAmp + '/';
+
+    var repoAmp = this.props.artifactId + '-repo-amp';
+    var repoModule = {moduleId: repoAmp};
+    var repoPom = _.assign(parent, repoModule);
+    var repoPkg = _.assign(pkg, repoModule);
+    var repoPath = repoAmp + '/';
+
     this.fs.copy(this.templatePath('dummyfile.txt'), this.destinationPath('dummyfile.txt'));
 
     this.fs.copy(this.templatePath('.gitignore'), this.destinationPath('.gitignore'));
@@ -87,28 +99,24 @@ module.exports = yeoman.generators.Base.extend({
     // Share config
     this.fs.copy(this.templatePath('share/src'), this.destinationPath('share/src'));
 
-    this.fs.copyTpl(this.templatePath('share/pom.xml'), this.destinationPath('share/pom.xml'), parent);
+    this.fs.copyTpl(this.templatePath('share/pom.xml'), this.destinationPath('share/pom.xml'), sharePom);
 
     // Alfresco config
     this.fs.copy(this.templatePath('repo/src'), this.destinationPath('repo/src'));
 
-    this.fs.copyTpl(this.templatePath('repo/pom.xml'), this.destinationPath('repo/pom.xml'), parent);
+    this.fs.copyTpl(this.templatePath('repo/pom.xml'), this.destinationPath('repo/pom.xml'), repoPom);
 
     // Runner
     this.fs.copy(this.templatePath('runner/src'), this.destinationPath('runner/src'));
     this.fs.copy(this.templatePath('runner/test-ng'), this.destinationPath('runner/test-ng'));
-    this.fs.copy(this.templatePath('runner/tomcat'), this.destinationPath('runner/tomcat'));
+    this.fs.copy(this.templatePath('runner/tomcat/context-solr.xml'), this.destinationPath('runner/tomcat/context-solr.xml'));
+    this.fs.copy(this.templatePath('runner/tomcat/context-share.xml'), this.destinationPath('runner/tomcat/context-share.xml'), shareModule);
+    this.fs.copy(this.templatePath('runner/tomcat/context-repo.xml'), this.destinationPath('runner/tomcat/context-repo.xml'), repoModule);
 
     this.fs.copyTpl(this.templatePath('runner/pom.xml'), this.destinationPath('runner/pom.xml'), parent);
 
     // Share amp module
     // TODO extract this part to a share amp subgenerator
-    var shareAmp = this.props.artifactId + '-share-amp';
-    var shareModule = {moduleId: shareAmp};
-    var sharePom = _.assign(parent, shareModule);
-    var sharePkg = _.assign(pkg, shareModule);
-    var sharePath = shareAmp + '/';
-
     this.fs.copyTpl(this.templatePath('share-amp/pom.xml'), this.destinationPath(sharePath + 'pom.xml'), sharePom);
 
     // tests
@@ -139,23 +147,17 @@ module.exports = yeoman.generators.Base.extend({
 
     // Repo amp module
     // TODO extract this part to a repo amp subgenerator
-    var repoAmp = this.props.artifactId + '-repo-amp';
-    var repoModule = {moduleId: repoAmp};
-    var repoPom = _.assign(parent, repoModule);
-    var repoPkg = _.assign(pkg, repoModule);
-    var repoPath = repoAmp + '/';
-
     this.fs.copyTpl(this.templatePath('repo-amp/pom.xml'), this.destinationPath(repoPath + 'pom.xml'), repoPom);
 
     // tests
     this.fs.copy(this.templatePath('repo-amp/src/test/properties'), this.destinationPath(repoPath + 'src/test/properties'));
     this.fs.copy(this.templatePath('repo-amp/src/test/resources'), this.destinationPath(repoPath + 'src/test/resources'));
-    this.fs.copyTpl(this.templatePath('repo-amp/src/test/java/demoamp/test/DemoComponentTest.java'), this.destinationPath(repoPath + 'src/test/java/' + this.props.package + '/test/DemoComponentTest.java'), pkg);
+    this.fs.copyTpl(this.templatePath('repo-amp/src/test/java/demoamp/test/DemoComponentTest.java'), this.destinationPath(repoPath + 'src/test/java/' + this.props.package + 'demoamp/test/DemoComponentTest.java'), pkg);
 
     // Java
-    this.fs.copyTpl(this.templatePath('repo-amp/src/main/java/demoamp/Demo.java'), this.destinationPath(repoPath + 'src/main/java/' + this.props.package + '/Demo.java'), pkg);
-    this.fs.copyTpl(this.templatePath('repo-amp/src/main/java/demoamp/DemoComponent.java'), this.destinationPath(repoPath + 'src/main/java/' + this.props.package + '/DemoComponent.java'), pkg);
-    this.fs.copyTpl(this.templatePath('repo-amp/src/main/java/demoamp/HelloWorldWebScript.java'), this.destinationPath(repoPath + 'src/main/java/' + this.props.package + '/HelloWorldWebScript.java'), pkg);
+    this.fs.copyTpl(this.templatePath('repo-amp/src/main/java/demoamp/Demo.java'), this.destinationPath(repoPath + 'src/main/java/' + this.props.package + '/demoamp/Demo.java'), pkg);
+    this.fs.copyTpl(this.templatePath('repo-amp/src/main/java/demoamp/DemoComponent.java'), this.destinationPath(repoPath + 'src/main/java/' + this.props.package + '/demoamp/DemoComponent.java'), pkg);
+    this.fs.copyTpl(this.templatePath('repo-amp/src/main/java/demoamp/HelloWorldWebScript.java'), this.destinationPath(repoPath + 'src/main/java/' + this.props.package + '/demoamp/HelloWorldWebScript.java'), pkg);
 
     // Main resources
     this.fs.copy(this.templatePath('repo-amp/src/main/amp/module.properties'), this.destinationPath(repoPath + 'src/main/amp/module.properties'));
