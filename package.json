@@ -1,6 +1,6 @@
 {
   "name": "generator-alfresco",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Generator used to create miscellaneous elements dedicated to Alfresco Module development such as webscripts (JS or Java-backed), Services/Jobs, Behaviours, Share pages (Aikau & Surf) and more...",
   "homepage": "https://github.com/myprysm/generator-alfresco",
   "author": {
@@ -38,5 +38,5 @@
     "prepublish": "gulp prepublish",
     "test": "gulp"
   },
-  "license": "Unlicense"
+  "license": "TBWL"
 }
