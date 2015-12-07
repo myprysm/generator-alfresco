@@ -6,6 +6,9 @@ var yosay = require('yosay');
 var _ = require('lodash');
 
 module.exports = yeoman.generators.Base.extend({
+  initializing: function () {
+    this.props = this.config.getAll() || {};
+  },
   prompting: function () {
     var done = this.async();
     var defaultAppBaseName = /^[a-zA-Z0-9_]+$/.test(path.basename(process.cwd())) ? path.basename(process.cwd()) : 'sample-aio';
@@ -76,14 +79,14 @@ module.exports = yeoman.generators.Base.extend({
 
     var shareAmp = this.props.artifactId + '-share-amp';
     var shareModule = {moduleId: shareAmp};
-    var sharePom = _.assign(parent, shareModule);
-    var sharePkg = _.assign(pkg, shareModule);
+    var sharePom = _.assign({}, parent, shareModule);
+    var sharePkg = _.assign({}, pkg, shareModule);
     var sharePath = shareAmp + '/';
 
     var repoAmp = this.props.artifactId + '-repo-amp';
     var repoModule = {moduleId: repoAmp};
-    var repoPom = _.assign(parent, repoModule);
-    var repoPkg = _.assign(pkg, repoModule);
+    var repoPom = _.assign({}, parent, repoModule);
+    var repoPkg = _.assign({}, pkg, repoModule);
     var repoPath = repoAmp + '/';
 
     this.fs.copy(this.templatePath('dummyfile.txt'), this.destinationPath('dummyfile.txt'));
@@ -110,8 +113,8 @@ module.exports = yeoman.generators.Base.extend({
     this.fs.copy(this.templatePath('runner/src'), this.destinationPath('runner/src'));
     this.fs.copy(this.templatePath('runner/test-ng'), this.destinationPath('runner/test-ng'));
     this.fs.copy(this.templatePath('runner/tomcat/context-solr.xml'), this.destinationPath('runner/tomcat/context-solr.xml'));
-    this.fs.copy(this.templatePath('runner/tomcat/context-share.xml'), this.destinationPath('runner/tomcat/context-share.xml'), shareModule);
-    this.fs.copy(this.templatePath('runner/tomcat/context-repo.xml'), this.destinationPath('runner/tomcat/context-repo.xml'), repoModule);
+    this.fs.copyTpl(this.templatePath('runner/tomcat/context-share.xml'), this.destinationPath('runner/tomcat/context-share.xml'), shareModule);
+    this.fs.copyTpl(this.templatePath('runner/tomcat/context-repo.xml'), this.destinationPath('runner/tomcat/context-repo.xml'), repoModule);
 
     this.fs.copyTpl(this.templatePath('runner/pom.xml'), this.destinationPath('runner/pom.xml'), parent);
 
@@ -121,8 +124,8 @@ module.exports = yeoman.generators.Base.extend({
 
     // tests
     this.fs.copyTpl(this.templatePath('share-amp/src/test/resources/testng.xml'), this.destinationPath(sharePath + 'src/test/resources/testng.xml'), pkg);
-    this.fs.copyTpl(this.templatePath('share-amp/src/test/java/demoamp/DemoPageTestIT.java'), this.destinationPath(sharePath + 'src/test/java/' + this.props.package + '/DemoPageTestIT.java'), pkg);
-    this.fs.copyTpl(this.templatePath('share-amp/src/test/java/demoamp/po/DemoPage.java'), this.destinationPath(sharePath + 'src/test/java/' + this.props.package + '/po/DemoPage.java'), pkg);
+    this.fs.copyTpl(this.templatePath('share-amp/src/test/java/demoamp/DemoPageTestIT.java'), this.destinationPath(sharePath + 'src/test/java/' + this.props.package.replace(/\./ig, '/') + '/DemoPageTestIT.java'), pkg);
+    this.fs.copyTpl(this.templatePath('share-amp/src/test/java/demoamp/po/DemoPage.java'), this.destinationPath(sharePath + 'src/test/java/' + this.props.package.replace(/\./ig, '/') + '/po/DemoPage.java'), pkg);
 
     // Main resources
     this.fs.copy(this.templatePath('share-amp/src/main/resources'), this.destinationPath(sharePath + 'src/main/resources'));
@@ -152,12 +155,12 @@ module.exports = yeoman.generators.Base.extend({
     // tests
     this.fs.copy(this.templatePath('repo-amp/src/test/properties'), this.destinationPath(repoPath + 'src/test/properties'));
     this.fs.copy(this.templatePath('repo-amp/src/test/resources'), this.destinationPath(repoPath + 'src/test/resources'));
-    this.fs.copyTpl(this.templatePath('repo-amp/src/test/java/demoamp/test/DemoComponentTest.java'), this.destinationPath(repoPath + 'src/test/java/' + this.props.package + 'demoamp/test/DemoComponentTest.java'), pkg);
+    this.fs.copyTpl(this.templatePath('repo-amp/src/test/java/demoamp/test/DemoComponentTest.java'), this.destinationPath(repoPath + 'src/test/java/' + this.props.package.replace(/\./ig, '/') + 'demoamp/test/DemoComponentTest.java'), pkg);
 
     // Java
-    this.fs.copyTpl(this.templatePath('repo-amp/src/main/java/demoamp/Demo.java'), this.destinationPath(repoPath + 'src/main/java/' + this.props.package + '/demoamp/Demo.java'), pkg);
-    this.fs.copyTpl(this.templatePath('repo-amp/src/main/java/demoamp/DemoComponent.java'), this.destinationPath(repoPath + 'src/main/java/' + this.props.package + '/demoamp/DemoComponent.java'), pkg);
-    this.fs.copyTpl(this.templatePath('repo-amp/src/main/java/demoamp/HelloWorldWebScript.java'), this.destinationPath(repoPath + 'src/main/java/' + this.props.package + '/demoamp/HelloWorldWebScript.java'), pkg);
+    this.fs.copyTpl(this.templatePath('repo-amp/src/main/java/demoamp/Demo.java'), this.destinationPath(repoPath + 'src/main/java/' + this.props.package.replace(/\./ig, '/') + '/demoamp/Demo.java'), pkg);
+    this.fs.copyTpl(this.templatePath('repo-amp/src/main/java/demoamp/DemoComponent.java'), this.destinationPath(repoPath + 'src/main/java/' + this.props.package.replace(/\./ig, '/') + '/demoamp/DemoComponent.java'), pkg);
+    this.fs.copyTpl(this.templatePath('repo-amp/src/main/java/demoamp/HelloWorldWebScript.java'), this.destinationPath(repoPath + 'src/main/java/' + this.props.package.replace(/\./ig, '/') + '/demoamp/HelloWorldWebScript.java'), pkg);
 
     // Main resources
     this.fs.copy(this.templatePath('repo-amp/src/main/amp/module.properties'), this.destinationPath(repoPath + 'src/main/amp/module.properties'));
@@ -193,6 +196,5 @@ module.exports = yeoman.generators.Base.extend({
 
   install: function () {
     this.log('Resolving dependencies first. After that you can either ' + chalk.bgBlack.white('mvn package') + ', ' + chalk.bgBlack.white('./run.sh') + ' or ' + chalk.bgBlack.white('.\\run.bat'));
-    this.spawnCommand('mvn', ['dependency:resolve']);
   }
 });
