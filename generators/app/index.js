@@ -77,6 +77,8 @@ module.exports = yeoman.generators.Base.extend({
     this.fs.copy(this.templatePath('dummyfile.txt'), this.destinationPath('dummyfile.txt'));
 
     this.fs.copy(this.templatePath('.gitignore'), this.destinationPath('.gitignore'));
+    this.fs.copy(this.templatePath('run.bat'), this.destinationPath('run.bat'));
+    this.fs.copy(this.templatePath('run.sh'), this.destinationPath('run.sh'));
 
     // SolR 4 Config
     this.fs.copyTpl(this.templatePath('solr-config/pom.xml'), this.destinationPath('solr-config/pom.xml'), parent);
@@ -130,7 +132,7 @@ module.exports = yeoman.generators.Base.extend({
 
     // Site webscripts
     this.fs.copy(this.templatePath('share-amp/src/main/amp/config/alfresco/web-extension/site-webscripts/org'), this.destinationPath(sharePath + 'src/main/amp/config/alfresco/web-extension/site-webscripts/org'));
-    this.fs.copy(this.templatePath('share-amp/src/main/amp/config/alfresco/web-extension/site-webscripts/com/example'), this.destinationPath('share-amp/src/main/amp/config/alfresco/web-extension/site-webscripts/' + this.props.package.replace(/\./ig, '/')));
+    this.fs.copy(this.templatePath('share-amp/src/main/amp/config/alfresco/web-extension/site-webscripts/com/example'), this.destinationPath(sharePath + 'src/main/amp/config/alfresco/web-extension/site-webscripts/' + this.props.package.replace(/\./ig, '/')));
 
     // Web assets
     this.fs.copy(this.templatePath('share-amp/src/main/amp/web'), this.destinationPath(sharePath + 'src/main/amp/web'));
@@ -189,6 +191,6 @@ module.exports = yeoman.generators.Base.extend({
 
   install: function () {
     this.log('Resolving dependencies first. After that you can either ' + chalk.bgBlack.white('mvn package') + ', ' + chalk.bgBlack.white('./run.sh') + ' or ' + chalk.bgBlack.white('.\\run.bat'));
-    //this.spawnCommand('mvn', ['dependency:resolve']);
+    this.spawnCommand('mvn', ['dependency:resolve']);
   }
 });
