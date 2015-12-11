@@ -1,30 +1,13 @@
 'use strict';
-var yeoman = require('yeoman-generator');
+var Located = require('../app/located');
 var yosay = require('yosay');
 var _ = require('lodash');
 var path = require('path');
 
-module.exports = yeoman.generators.Base.extend({
+module.exports = Located.extend({
   // note: arguments and options should be defined in the constructor.
   constructor: function () {
-    yeoman.generators.Base.apply(this, arguments);
-
-    // This method adds support for a `--coffee` flag
-    this.option('path', {
-      desc: 'Path to create the widget',
-      alias: 'p',
-      type: String,
-      defaults: ''
-    });
-
-    this.option('container', {
-      desc: 'If set, will create the widget in a folder named upon widgetName',
-      alias: 'c',
-      type: Boolean,
-      defaults: false
-    });
-
-    this.options.path = path.normalize(this.options.path);
+    Located.apply(this, arguments);
   },
   prompting: function () {
     var done = this.async();
@@ -40,7 +23,7 @@ module.exports = yeoman.generators.Base.extend({
       default: 'TemplateWidget'
     }];
 
-    this.prompt(prompts, function (props) {
+    this._optionalPrompt(prompts, function (props) {
       this.props = props;
       done();
     }.bind(this));
@@ -75,9 +58,5 @@ module.exports = yeoman.generators.Base.extend({
       this.templatePath('i18n/TemplateWidget.properties'),
       this.destinationPath(basePath + 'i18n/' + cName + '.properties')
     );
-  },
-
-  install: function () {
-
   }
 });

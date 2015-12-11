@@ -1,10 +1,68 @@
 'use strict';
 
-var yeoman = require('yeoman-generator');
-//var chalk = require('chalk');
-//var yosay = require('yosay');
+var Located = require('../app/located');
 
-module.exports = yeoman.generators.Base.extend({
+module.exports = Located.extend({
+  constructor: function () {
+    Located.apply(this, arguments);
+
+    this.option('id', {
+      desc: 'ID or name of the webscript',
+      alias: 'i',
+      type: String,
+      defaults: ''
+    });
+
+    this.option('shortname', {
+      desc: 'Shortname of the webscript (if different of ID)',
+      alias: 's',
+      type: String,
+      defaults: ''
+    });
+
+    this.option('description', {
+      desc: 'Description of the webscript',
+      alias: 'd',
+      type: String,
+      defaults: ''
+    });
+
+    this.option('family', {
+      desc: 'Family of the webscript',
+      alias: 'f',
+      type: String,
+      defaults: ''
+    });
+
+    this.option('url', {
+      desc: 'URL of the webscript',
+      alias: 'u',
+      type: String,
+      defaults: ''
+    });
+
+    this.option('method', {
+      desc: 'HTTP Method applied for the webscript (get, post, put, delete)',
+      alias: 'm',
+      type: String,
+      defaults: 'get'
+    });
+
+    this.option('format', {
+      desc: 'Default format used for response rendering (json, html, xml, atom)',
+      alias: 'o',
+      type: String,
+      defaults: 'json'
+    });
+
+    this.option('authentication', {
+      desc: 'Authentication type for the webscript',
+      alias: 'a',
+      type: String,
+      defaults: 'user'
+    });
+
+  },
   prompting: function () {
     var done = this.async();
 
@@ -61,7 +119,12 @@ module.exports = yeoman.generators.Base.extend({
       default: 2
     }];
 
-    this.prompt(prompts, function (props) {
+    this._optionalPrompt(prompts, function (props) {
+      this.log('Got:');
+      Object.keys(props).forEach(function (opt) {
+        this.log('- ' + opt + ': ' + props[opt]);
+      }, this);
+
       this.props = props;
       done();
     }.bind(this));
