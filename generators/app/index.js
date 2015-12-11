@@ -11,7 +11,7 @@ module.exports = yeoman.generators.Base.extend({
   },
   prompting: function () {
     var done = this.async();
-    var defaultAppBaseName = /^[a-zA-Z0-9_]+$/.test(path.basename(process.cwd())) ? path.basename(process.cwd()) : 'sample-aio';
+    var defaultAppBaseName = /^[a-zA-Z0-9_-]+$/.test(path.basename(process.cwd())) ? path.basename(process.cwd()) : 'sample-aio';
     // Have Yeoman greet the user.
     this.log(yosay(
       'Welcome to the solid ' + chalk.red('generator-alfresco') + ' generator!'
